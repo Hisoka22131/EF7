@@ -1,27 +1,27 @@
 ﻿using EF7;
+using Microsoft.EntityFrameworkCore;
 
 public class Program
 {
+    private static readonly ApplicationContext context = new ApplicationContext();
+
     private static void Main(string[] args)
     {
-        using (ApplicationContext db = new ApplicationContext())
-        {
-            // получаем объекты из бд и выводим на консоль
-            //GetSuppliers();
-            //GetCustomers();
-            //GetOrders();
-            //GetOrderItems();
-            //GetProducts();
-            GetCustomerOrders();
-        }
+        // получаем объекты из бд и выводим на консоль
+        //GetSuppliers();
+        //GetCustomers();
+        //GetOrders();
+        //GetOrderItems();
+        //GetProducts();
+        GetCustomerOrders();
     }
+
     /// <summary>
     /// Выводим всех поставщиков
     /// </summary>
     private static void GetSuppliers()
     {
-        ApplicationContext db = new();
-        var suppliers = db.Supplier.ToList();
+        var suppliers = context.Supplier.ToList();
         Console.WriteLine("Suppliers list:");
         foreach (var supplier in suppliers)
         {
@@ -34,8 +34,7 @@ public class Program
     /// </summary>
     private static void GetCustomers()
     {
-        ApplicationContext db = new();
-        var customers = db.Customer.ToList();
+        var customers = context.Customer.ToList();
         Console.WriteLine("Customers list:");
         foreach (var customer in customers)
         {
@@ -48,12 +47,11 @@ public class Program
     /// </summary>
     private static void GetOrders()
     {
-        ApplicationContext db = new();
-        var orders = db.Order.ToList();
+        var orders = context.Order.ToList();
         Console.WriteLine("Orders list:");
         foreach (var order in orders)
         {
-            Console.WriteLine($"{order.Id} {order.OrderNumber}");
+            Console.WriteLine($"{order.Id} {order.OrderNumber} {order.Customer?.Id}");
         }
     }
 
@@ -62,8 +60,7 @@ public class Program
     /// </summary>
     private static void GetOrderItems()
     {
-        ApplicationContext db = new();
-        var orderItems = db.OrderItem.ToList();
+        var orderItems = context.OrderItem.ToList();
         Console.WriteLine("OrderItems list:");
         foreach (var orderItem in orderItems)
         {
@@ -76,8 +73,7 @@ public class Program
     /// </summary>
     private static void GetProducts()
     {
-        ApplicationContext db = new();
-        var products = db.Product.ToList();
+        var products = context.Product.ToList();
         Console.WriteLine("Products list:");
         foreach (var product in products)
         {
@@ -90,17 +86,14 @@ public class Program
     /// </summary>
     private static void GetCustomerOrders()
     {
-        ApplicationContext db = new();
-        var customers = db.Customer.ToList().Select(q => new { Id = q.Id, Name = q.FirstName + " " + q.LastName });
+        var customers = context.Customer.ToList().Select(q => new { Id = q.Id, Name = q.FirstName + " " + q.LastName, Orders = q.Orders});
         foreach (var customer in customers)
         {
             Console.WriteLine(customer.Name + ":");
-            var orders = db.Order.Where(q => q.CustomerId == customer.Id).ToList();
-            int i = 0;
+            var orders = customer.Orders;
             foreach (var order in orders)
             {
-                i++;
-                Console.WriteLine($"{i,5}. {order.OrderNumber}");
+                Console.WriteLine($"{order.OrderNumber}");
             }
         }
     }
