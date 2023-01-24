@@ -1,8 +1,10 @@
 ﻿using EF7;
+using EF7.Repository;
 using Microsoft.EntityFrameworkCore;
 
 public class Program
 {
+    private static readonly CustomerRepository customerRepository = new(new ApplicationContext());
     private static readonly ApplicationContext context = new ApplicationContext();
 
     private static void Main(string[] args)
@@ -13,7 +15,12 @@ public class Program
         //GetOrders();
         //GetOrderItems();
         //GetProducts();
-        GetCustomerOrders();
+        //GetCustomerOrders();
+        var customer = customerRepository.GetEntity(5);
+        Console.WriteLine(customer.FirstName);
+        foreach (var order in customerRepository.GetAll().Where(q => q.Id == customer.Id).SelectMany(q => q.Orders))
+            Console.WriteLine(order.OrderNumber);
+
     }
 
     /// <summary>
@@ -86,10 +93,10 @@ public class Program
     /// </summary>
     private static void GetCustomerOrders()
     {
-        var customers = context.Customer.ToList().Select(q => new { Id = q.Id, Name = q.FirstName + " " + q.LastName, Orders = q.Orders});
+        var customers = customerRepository.GetAll().ToList().Select(q => new { Id = q.Id, Name = q.FirstName + " " + q.LastName, Orders = q.Orders });
         foreach (var customer in customers)
         {
-            Console.WriteLine(customer.Name + ":");
+            Console.WriteLine(customer.Id + " " + customer.Name + ":");
             var orders = customer.Orders;
             foreach (var order in orders)
             {

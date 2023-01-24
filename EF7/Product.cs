@@ -13,7 +13,7 @@ namespace EF7
         public decimal? UnitPrice { get; set; }
         public string? Package { get; set; }
         public bool? IsDiscontinued { get; set; }
-        public Supplier Supplier { get; set; } 
+        public Supplier? Supplier { get; set; } 
         public IList<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
 }
