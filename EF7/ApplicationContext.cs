@@ -1,11 +1,11 @@
 ﻿using EF7.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Data.Common;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+
+namespace EF7;
 
 public class ApplicationContext : DbContext
 {
-    private static string connectionString = @"Server=.\;Database=SalesDB;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True";
+    private const string ConnectionString = @"Server=.\;Database=SalesDB;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True";
     public DbSet<Supplier> Supplier { get; set; } = null!;
     public DbSet<Customer> Customer { get; set; } = null!;
     public DbSet<Order> Order { get; set; } = null!;
@@ -27,7 +27,7 @@ public class ApplicationContext : DbContext
         // Используем если в дальнейшем будем выгружать данные через явную загрузку(Придётся много кода писать)
         //dbContextOptionsBuilder.UseSqlServer(connectionString);
         dbContextOptionsBuilder.UseLazyLoadingProxies()
-        .UseSqlServer(connectionString);
+            .UseSqlServer(ConnectionString);
     }
 
     /// <summary>
@@ -66,4 +66,3 @@ public class ApplicationContext : DbContext
         //modelBuilder.Entity<Supplier>().Navigation(q => q.Products).AutoInclude();
     }
 }
-
