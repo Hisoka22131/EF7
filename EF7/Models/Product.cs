@@ -4,16 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EF7
+namespace EF7.Models
 {
-    public class Product
+    public class Product : EntityBase
     {
-        public int Id { get; set; }
+        public override int Id { get; set; }
         public string? ProductName { get; set; }
         public decimal? UnitPrice { get; set; }
         public string? Package { get; set; }
         public bool? IsDiscontinued { get; set; }
-        public Supplier? Supplier { get; set; } 
-        public IList<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+        public virtual Supplier? Supplier { get; set; }
+        public virtual IList<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
 }

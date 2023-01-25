@@ -1,9 +1,8 @@
-﻿
-namespace EF7
+﻿namespace EF7.Models
 {
-    public class Supplier
+    public class Supplier : EntityBase
     {
-        public int Id { get; set; }
+        public override int Id { get; set; }
         public string? CompanyName { get; set; }
         public string? ContactName { get; set; }
         public string? ContactTitle { get; set; }
@@ -11,6 +10,6 @@ namespace EF7
         public string? Country { get; set; }
         public string? Phone { get; set; }
         public string? Fax { get; set; }
-        public IList<Product> Products { get; set; } = new List<Product>();
+        public virtual IList<Product> Products { get; set; } = new List<Product>();
     }
 }

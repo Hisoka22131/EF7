@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EF7
+namespace EF7.Models
 {
-    public class OrderItem
+    public class OrderItem : EntityBase
     {
-        public int Id { get; set; }
+        public override int Id { get; set; }
         public decimal? UnitPrice { get; set; }
         public int? Quantity { get; set; }
-        public Order? Order { get; set; }
-        public Product? Product { get; set; }
+        public virtual Order? Order { get; set; }
+        public virtual Product? Product { get; set; }
 
     }
 }

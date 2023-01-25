@@ -1,26 +1,32 @@
 ﻿using EF7;
+using EF7.BaseRepository;
+using EF7.Models;
 using EF7.Repository;
+using EF7.Repository.Dto;
 using Microsoft.EntityFrameworkCore;
 
 public class Program
 {
-    private static readonly CustomerRepository customerRepository = new(new ApplicationContext());
-    private static readonly ApplicationContext context = new ApplicationContext();
+    private static readonly BaseRepository<Customer> customerRepository = new(new ApplicationContext());
+    private static readonly BaseRepository<Order> orderRepository = new(new ApplicationContext());
+    private static readonly BaseRepository<OrderItem> orderItemRepository = new(new ApplicationContext());
+    private static readonly BaseRepository<Product> productRepository = new(new ApplicationContext());
+    private static readonly BaseRepository<Supplier> supplierRepository = new(new ApplicationContext());
 
     private static void Main(string[] args)
     {
         // получаем объекты из бд и выводим на консоль
         //GetSuppliers();
         //GetCustomers();
-        //GetOrders();
         //GetOrderItems();
         //GetProducts();
-        //GetCustomerOrders();
-        var customer = customerRepository.GetEntity(5);
-        Console.WriteLine(customer.FirstName);
-        foreach (var order in customerRepository.GetAll().Where(q => q.Id == customer.Id).SelectMany(q => q.Orders))
-            Console.WriteLine(order.OrderNumber);
+        GetCustomerOrders();
+        //GetOrders(); 
 
+        //var customer = customerRepository.GetEntity(5);
+        //customerRepository.DeleteEntity();
+        //customerRepository.DeleteEntity(customer);
+        //Console.WriteLine(customer.FirstName);
     }
 
     /// <summary>
@@ -28,7 +34,7 @@ public class Program
     /// </summary>
     private static void GetSuppliers()
     {
-        var suppliers = context.Supplier.ToList();
+        var suppliers = supplierRepository.GetEntities().ToList();
         Console.WriteLine("Suppliers list:");
         foreach (var supplier in suppliers)
         {
@@ -41,7 +47,7 @@ public class Program
     /// </summary>
     private static void GetCustomers()
     {
-        var customers = context.Customer.ToList();
+        var customers = customerRepository.GetEntities().ToList();
         Console.WriteLine("Customers list:");
         foreach (var customer in customers)
         {
@@ -54,7 +60,7 @@ public class Program
     /// </summary>
     private static void GetOrders()
     {
-        var orders = context.Order.ToList();
+        var orders = orderRepository.GetEntities().ToList();
         Console.WriteLine("Orders list:");
         foreach (var order in orders)
         {
@@ -67,7 +73,7 @@ public class Program
     /// </summary>
     private static void GetOrderItems()
     {
-        var orderItems = context.OrderItem.ToList();
+        var orderItems = orderItemRepository.GetEntities().ToList();
         Console.WriteLine("OrderItems list:");
         foreach (var orderItem in orderItems)
         {
@@ -80,7 +86,7 @@ public class Program
     /// </summary>
     private static void GetProducts()
     {
-        var products = context.Product.ToList();
+        var products = productRepository.GetEntities().ToList();
         Console.WriteLine("Products list:");
         foreach (var product in products)
         {
@@ -93,12 +99,11 @@ public class Program
     /// </summary>
     private static void GetCustomerOrders()
     {
-        var customers = customerRepository.GetAll().ToList().Select(q => new { Id = q.Id, Name = q.FirstName + " " + q.LastName, Orders = q.Orders });
+        var customers = customerRepository.GetEntities().ToList().Select(q => new { Id = q.Id, Name = q.FirstName + " " + q.LastName, Orders = q.Orders });
         foreach (var customer in customers)
         {
             Console.WriteLine(customer.Id + " " + customer.Name + ":");
-            var orders = customer.Orders;
-            foreach (var order in orders)
+            foreach (var order in customer.Orders)
             {
                 Console.WriteLine($"{order.OrderNumber}");
             }
